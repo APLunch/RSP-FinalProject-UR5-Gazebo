@@ -163,7 +163,7 @@ class ZeroShotDetector:
         ax.add_patch(plt.Rectangle((x0, y0), w, h, edgecolor='green', facecolor=(0,0,0,0), lw=2)) 
         ax.text(x0, y0, label)
 
-    def draw_segmentation(self, masks, text_queries, scores, boxes, labels):
+    def draw_segmentation(self, image, masks, text_queries, scores, boxes, labels):
         # draw output image
         plt.figure(figsize=(10, 10))
         plt.imshow(image)
@@ -192,5 +192,5 @@ if __name__=="__main__":
     detector.draw_prediction(image2, text_queries2, labels_pool[1], scores_pool[1], boxes_pool[1])
 
     masks = detector.segment(image, boxes_pool[0])
-    detector.draw_segmentation(masks, text_queries, scores_pool[0], boxes_pool[0], labels_pool[0])
+    detector.draw_segmentation(image, masks, text_queries, scores_pool[0], boxes_pool[0], labels_pool[0])
 
