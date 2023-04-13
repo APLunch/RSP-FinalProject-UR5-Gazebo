@@ -13,6 +13,7 @@ from transformers.image_utils import ImageFeatureExtractionMixin
 
 class ZeroShotDetector:
     def __init__(self):
+        self.score_threshold = 0.1
         ## OWL ViT
         self.mixin = ImageFeatureExtractionMixin()
         # Use GPU if available
@@ -28,9 +29,9 @@ class ZeroShotDetector:
         self.model.to(self.device)
         self.model.eval()
         ## SAM
-        self.sam_checkpoint = "sam_vit_h_4b8939.pth"
+        self.sam_checkpoint = "Grounded-Segment-Anything/sam_vit_h_4b8939.pth"
         self.predictor = SamPredictor(build_sam(checkpoint=self.sam_checkpoint).to(self.device))
-        # self.predictor = SamPredictor(build_sam(checkpoint=self.sam_checkpoint))
+        # self.predictor = SamPredictor(build_sam(checkpoint=self.sam_checkpoint).to("cpu"))
 
     def detect(self, images, text_queries):
         inputs = self.processor(text=text_queries, images=images, return_tensors="pt").to(self.device)
@@ -45,6 +46,14 @@ class ZeroShotDetector:
         # Convert outputs (bounding boxes and class logits) to COCO API
         results = self.processor.post_process(outputs=outputs, target_sizes=target_sizes)
 
+        results = [
+            {
+                "boxes": results[i]["boxes"][torch.nonzero(results[i]["scores"] > self.score_threshold, as_tuple=True)[0]],
+                "labels": results[i]["labels"][torch.nonzero(results[i]["scores"] > self.score_threshold, as_tuple=True)[0]],
+                "scores": results[i]["scores"][torch.nonzero(results[i]["scores"] > self.score_threshold, as_tuple=True)[0]]
+            }
+            for i in range(len(images))
+        ]
         boxes_pool = [results[i]["boxes"] for i in range(len(images))]
         scores_pool = [results[i]["scores"] for i in range(len(images))]
         labels_pool = [results[i]["labels"] for i in range(len(images))]
@@ -52,8 +61,12 @@ class ZeroShotDetector:
         return labels_pool, scores_pool, boxes_pool
     
     def segment(self, image, boxes):
+        # boxes = boxes.to("cpu")
+        boxes = boxes.to(self.device)
         self.predictor.set_image(image)
         transformed_boxes = self.predictor.transform.apply_boxes_torch(boxes, image.shape[:2])
+        # transformed_boxes = transformed_boxes.to("cpu")
+        transformed_boxes = transformed_boxes.to(self.device)
         with torch.no_grad():
             masks, _, _ = self.predictor.predict_torch(
                 point_coords = None,
@@ -76,9 +89,8 @@ class ZeroShotDetector:
             value=color_bg)
         image_s = cv2.cvtColor(image_s, cv2.COLOR_BGR2RGB)
         # Threshold to eliminate low probability predictions
-        score_threshold = 0.1
         for score, box, label in zip(scores, boxes, labels):
-            if score < score_threshold:
+            if score < self.score_threshold:
                 continue
             box = [round(i, 2) for i in box.tolist()]
             x0, y0, x1, y1 = box
@@ -152,7 +164,6 @@ class ZeroShotDetector:
         ax.text(x0, y0, label)
 
     def draw_segmentation(self, masks, text_queries, scores, boxes, labels):
-        boxes = self.predictor.transform.apply_boxes_torch(boxes, image.shape[:2])
         # draw output image
         plt.figure(figsize=(10, 10))
         plt.imshow(image)
