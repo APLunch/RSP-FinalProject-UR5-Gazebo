@@ -63,21 +63,14 @@ class ZeroShotVision:
         
         boxes_filt_list, pred_phrases_list = self.get_grounding_output(image_batch, text_prompt_list)
 
-        final_boxes_filt_list = []
-        for image_pil, boxes_filt in zip(image_pil_list, boxes_filt_list):
-            size = image_pil.size
-            H, W = size[1], size[0]
-            
-            # Scale the bounding boxes
-            for i in range(boxes_filt.size(0)):
-                boxes_filt[i] = boxes_filt[i] * torch.Tensor([W, H, W, H])
-
-            # Recalculate box center and dimensions
-            for i in range(boxes_filt.size(0)):
-                boxes_filt[i][:2] -= boxes_filt[i][2:] / 2
-                boxes_filt[i][2:] += boxes_filt[i][:2]
-
-            final_boxes_filt_list.append(boxes_filt)
+        final_boxes_filt_list = [
+            torch.stack([
+                torch.cat((box[:2] * torch.Tensor([image_pil.size[0], image_pil.size[1]]) - box[2:] * torch.Tensor([image_pil.size[0], image_pil.size[1]]) / 2, 
+                        box[:2] * torch.Tensor([image_pil.size[0], image_pil.size[1]]) + box[2:] * torch.Tensor([image_pil.size[0], image_pil.size[1]]) / 2))
+                for box in boxes_filt
+            ])
+            for image_pil, boxes_filt in zip(image_pil_list, boxes_filt_list)
+        ]
 
         return final_boxes_filt_list, pred_phrases_list
     
@@ -145,7 +138,7 @@ class ZeroShotVision:
 
         logits, boxes = outputs["pred_logits"].cpu().sigmoid(), outputs["pred_boxes"].cpu()
         filt_mask = logits.max(dim=2)[0] > self.box_threshold
-        logits_filt_list, boxes_filt_list = [logits[i][filt_mask[i]] for i in range(logits.size(0))], [boxes[i][filt_mask[i]] for i in range(boxes.size(0))]
+        logits_filt_list, boxes_filt_list = logits[filt_mask], boxes[filt_mask]
 
         # get phrase
         tokenlizer = self.dino_model.tokenizer
@@ -157,10 +150,10 @@ class ZeroShotVision:
                 get_phrases_from_posmap(logit > self.text_threshold, tokenized, tokenlizer) + (f"({str(logit.max().item())[:4]})" if with_logits else "")
                 for logit, box in zip(logits_filt, boxes_filt)
             ]
-            for logits_filt, boxes_filt, tokenized in zip(logits_filt_list, boxes_filt_list, tokenized_list)
+            for logits_filt, boxes_filt, tokenized in zip(logits_filt_list.split(filt_mask.sum(dim=1).tolist()), boxes_filt_list.split(filt_mask.sum(dim=1).tolist()), tokenized_list)
         ]
 
-        return boxes_filt_list, pred_phrases_list
+        return boxes_filt_list.split(filt_mask.sum(dim=1).tolist()), pred_phrases_list
 
     def show_mask(self, mask, ax, random_color=False):
         if random_color:
