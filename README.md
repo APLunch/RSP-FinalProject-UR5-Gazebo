@@ -23,7 +23,7 @@ The components (folders) of this project are listed as follow:
 - **visual**: This folder contains packages that involve environmental sensing using cameras, including object detection, segmentation, and tracking. For more details, please refer to the README file inside the visual folder.
 - **control**: This folder contains control packages that involve moving and manipulating robots at a lower level. These packages take high-level control commands selected by the AI as input and drive the robot. Examples of packages in this folder include UR5 controller, mobile robot controller, trajectory generators, and motion planning modules. Please see the README file inside the control folder for more information.
 - **comminication**: This folder contains packages related to AI reasoning models, human input interfaces, and higher-level robot command output ports.
-- **simulation**: This folder contains simulations for robots to be controlled. It's essential to test the viability of the robots in the simulator before deploying them in the real world.
+- **simulation**: This folder contains simulations for robots to be controlled. It's essential to test the viability of the robots in the simulator before deploying them in the real world. For UR5 simulation, see [this page](https://github.com/APLunch/Intelligent-General-Robot/blob/master/simulation/ur_simulation/README.md).
 
 ## How-To
 1. Install ROS2 galactic following [this link](https://docs.ros.org/en/galactic/Installation.html).
