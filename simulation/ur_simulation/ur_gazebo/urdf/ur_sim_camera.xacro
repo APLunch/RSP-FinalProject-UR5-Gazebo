@@ -1,0 +1,54 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ur_sim_camera">
+    <xacro:macro name="ur_sim_camera" params="name parent *origin">    
+        <link name="camera_body">
+            <xacro:insert_block name="origin"/>
+            <visual>
+                <origin xyz="0 0 0" rpy="1.57 0 1.57"/>
+                <geometry>
+                    <!--Orient the model to look forward-->
+                    <mesh filename="file://$(find ur_gazebo)/meshes/Camera.obj" scale="0.001 0.001 0.001" />
+                
+                </geometry>
+                <material name="Grey">
+                    <color rgba="0.5 0.5 0.5 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <mesh filename="file://$(find ur_gazebo)/meshes/Camera.obj" scale="0.001 0.001 0.001" />
+                </geometry>
+            </collision>
+        </link>
+        <joint name="camera_link" type="fixed">
+            <parent link="${parent}"/>
+            <child link="camera_body"/>
+            <xacro:insert_block name="origin"/>
+        </joint>        
+
+        <gazebo reference="camera_body">
+            <sensor name="${name}" type="camera">
+                <ignition_frame_id>base_link</ignition_frame_id>
+                <update_rate>40.0</update_rate>
+                <always_on>1</always_on>
+                <topic> camera </topic>
+                <camera name="camera">
+                    <horizontal_fov>1.047</horizontal_fov>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>100</far>
+                    </clip>
+                </camera>
+                <visualize>true</visualize>
+                	<plugin filename="ignition-gazebo-sensors-system"
+                        name="ignition::gazebo::systems::Sensors">
+                    </plugin>
+            </sensor>
+        </gazebo> 
+        
+    </xacro:macro>
+</robot>

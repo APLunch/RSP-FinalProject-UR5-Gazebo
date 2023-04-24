@@ -86,10 +86,99 @@
       </spot>
     </light>
     
+    <!-- Include the table model-->
     <include>
       <uri>
       https://fuel.gazebosim.org/1.0/OpenRobotics/models/Table
       </uri>
     </include>
+
+
+    <!-- Camera Sensors-->
+    <model name="camera1">
+      <pose>2.54 0.0031 1.943 0.0 0.3146 3.14</pose>
+      <link name="camera1_link">
+        <pose>0.05 0.05 0.05 0 0 0</pose>
+        <collision name="camera_1_collision">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="camera_1_visual">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <sensor name="camera1" type="camera">
+          <camera>
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+              <width>320</width>
+              <height>240</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.2</near>
+              <far>300</far>
+            </clip>
+          </camera>
+          <always_on>1</always_on>
+          <update_rate>30</update_rate>
+          <visualize>true</visualize>
+          <topic>image1</topic>
+          <plugin
+            filename="ignition-gazebo-sensors-system"
+            name="ignition::gazebo::systems::Sensors">
+          </plugin>
+        </sensor>
+      </link>
+      <static>true</static>
+    </model>
+
+    <!-- Camera Sensors-->
+    <model name="camera2">
+      <pose>0.12 1.84 1.943 0.0 0.3146 -1.57</pose>
+      <link name="camera2_link">
+        <pose>0.05 0.05 0.05 0 0 0</pose>
+        <collision name="camera_2_collision">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="camera_2_visual">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <sensor name="camera2" type="camera">
+          <camera>
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+              <width>320</width>
+              <height>240</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.2</near>
+              <far>300</far>
+            </clip>
+          </camera>
+          <always_on>1</always_on>
+          <update_rate>30</update_rate>
+          <visualize>true</visualize>
+          <topic>image2</topic>
+        </sensor>
+      </link>
+      <static>true</static>
+    </model>
+
   </world>
 </sdf>

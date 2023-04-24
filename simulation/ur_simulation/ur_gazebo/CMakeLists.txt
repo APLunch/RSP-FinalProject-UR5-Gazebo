@@ -7,7 +7,28 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(ignition-plugin REQUIRED)
+
+
+# install launch files
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+# install world files
+install(DIRECTORY world
+  DESTINATION share/${PROJECT_NAME}
+)
+# install urdf files
+install(DIRECTORY urdf
+  DESTINATION share/${PROJECT_NAME}
+)
+# install rviz files
+install(DIRECTORY rviz
+  DESTINATION share/${PROJECT_NAME}
+)
+# install meshes files
+install(DIRECTORY meshes
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
