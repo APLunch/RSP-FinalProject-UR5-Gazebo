@@ -40,8 +40,8 @@
    <xacro:arg name="use_fake_hardware" default="false" />
    <xacro:arg name="fake_sensor_commands" default="false" />
    <xacro:arg name="sim_gazebo" default="false" />
-   <xacro:arg name="sim_ignition" default="false" />
-   <xacro:arg name="simulation_controllers" default="" />
+   <xacro:arg name="sim_ignition" default="true" />
+   <xacro:arg name="simulation_controllers" default="$(find ur_gazebo)/config/controller_configuration.yaml" />
 
    <!-- initial position for simulations (Fake Hardware, Gazebo, Ignition) -->
    <xacro:arg name="initial_positions_file" default="$(find ur_description)/config/initial_positions.yaml"/>
@@ -99,9 +99,10 @@
       </plugin>
     </gazebo>
   </xacro:if>
-
+    
   <xacro:if value="$(arg sim_ignition)">
     <!-- Gazebo plugins -->
+    <!-- This seems to be working only with edifice not fortress.
     <gazebo reference="world">
     </gazebo>
     <gazebo>
@@ -110,10 +111,39 @@
         <controller_manager_node_name>$(arg prefix)controller_manager</controller_manager_node_name>
       </plugin>
     </gazebo>
+    -->
+
+<!-- This block does seem necessary for the ignition simulation + ros2_conrol to work
+  <ros2_control name="IgnitionSystem" type="system">
+    <hardware>
+      <plugin>ign_ros2_control/IgnitionSystem</plugin>
+    </hardware>
+    <joint name="shoulder_pan_joint">
+      <command_interface name="position">
+        <param name="min">-3.1415926</param>
+        <param name="max">3.1415926</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+
+  </ros2_control>
+-->
+
+  <gazebo>
+    <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+      <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node>
+      <parameters>$(arg simulation_controllers)</parameters>
+    </plugin>
+  </gazebo>
+
 
   </xacro:if>
 
   <!-- Joint state publisher-->
+  
   <gazebo>
       <plugin filename="libignition-gazebo-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher"/>
   </gazebo>

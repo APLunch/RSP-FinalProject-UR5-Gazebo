@@ -163,7 +163,7 @@ def generate_launch_description():
     # Create ign ros bridge for /image2 topic
     ign_ros_bridge_image2 = Node(
         package='ros_ign_bridge',
-        executable='parameter_bridge',
+        executable='parameter_bridge', 
         arguments=['/image2@sensor_msgs/msg/Image@ignition.msgs.Image'],
         output='screen'
     )
