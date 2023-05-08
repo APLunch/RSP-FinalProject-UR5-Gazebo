@@ -1,6 +1,10 @@
 # UR Simulation
 UR Simulation is an Ignition Gazebo simulation of a UR5 mainipulator robot with a Robotiq gripper in the real world. It is a fundamental necessity for the research project.
 
+<img src="https://user-images.githubusercontent.com/60408626/233907555-662ae740-2485-483c-b73e-95e3158d82c3.png" width = 400> <img src="https://user-images.githubusercontent.com/60408626/233907640-ec122046-031d-4f26-8c2d-6b89b7cc95c0.png" width = 500>
+
+
+
 ## Requirements
 ### Platform
 - ROS2 Galactic
@@ -15,6 +19,31 @@ UR Simulation is an Ignition Gazebo simulation of a UR5 mainipulator robot with 
 ### Sensors
 - The camera parameters (fov, pose, etc.) should be configure-able by a config file
 - The simulator package should publish sensor_msgs/Image to 3 topics ```/image1```, ```/image2``` and ```/image3```. Each corresponds to the footage of the cameras in the world.
+
+## How-To
+### Step 0: Install Dependencies
+Dependencies installation will be covered in the project README file
+### Step 1: Build Packages
+```bash
+colcon build 
+```
+
+### Step 2: Source Gazebo Resource path
+```bash
+export IGN_GAZEBO_RESOURCE_PATH="/opt/ros/galactic/share"
+```
+This step is necessry for gazebo to load resources from the ros2 installed packages.
+
+### Step 3: Source Built Packages
+``` bash
+source install/setup.bash
+```
+
+### Step 3: Launch Simulation
+```bash
+ros2 launch ur_gazebo ur_simulation.launch.py
+```
+A Gazebo smulation and a Rviz window with 2 camera windows should pop up.
  
 ## Details - ur_gazebo Package
 ```ur_gazebo``` contains the simulation world description files (sdf) and the associated launch files.
@@ -46,7 +75,26 @@ export IGN_GAZEBO_RESOURCE_PATH="/opt/ros/galactic/share"
 ### Robot Description
 The urdf file for the robot is generated from a modified ur xacro file  ```urdf/ur.urdf.xacro```. The file is originally from ur_description package but it is modified to include the gripper model and necessary sensors. Note that the robot bringup and the generation of the robot description from this file still depend on components of ```ur_description``` package.
 
+The modified robot description includes gazebo joint state publisher plugin to accomodate visualization is Rviz.
+
+### Cameras in Simulation World
+<img src="https://user-images.githubusercontent.com/60408626/233908460-98a723db-387c-4975-946f-dd3a2273b281.png" width = 400>
+
+Two cameras are mounted at a 90 degree angle looking at the robot. Each camera are condigured in a code block in 
+```ur_gazebo/world/ur_simulation_world.sdf``` file. Parameters including pose, resolution, fov, etc. can be changed in the sdf file. Each camera has an ignition gazebo topic publishing their footage ``` /image1``` and ```/image2```. These topic are bridged to ROS2 topics with the same names.
+
+### Launch File
+The launch file ```launch/ur_simulation.launch.py``` is the launch file that bringup the simulation, spwan the robot, and setup the sensors.
+It launches the following component sequentially:
+1. robot_state_publisher (from robot description)
+2. rviz node
+3. ignition gazebo (from world sdf file)
+4. spawn ur5 robot in simulation world
+5. ign_ros_bridges (joint_states, image topics)
 
 ## TODO: 
 - Add gripper to the model
+- Setup controller for UR5 robot in control package
 - Issue: Robotiq does not have ROS2 driver. It is not controlled in real life.
+- Add additional camera on robot hand
+
