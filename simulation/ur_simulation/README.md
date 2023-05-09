@@ -35,7 +35,7 @@ export IGN_GAZEBO_RESOURCE_PATH="/opt/ros/galactic/share"
 This step is necessry for gazebo to load resources from the ros2 installed packages.
 
 ```bash
-export IGN_GAZEBO_SYSTEM_PLUGIN_PATH==$IGN_GAZEBO_SYSTEM_PLUGIN_PATH=:<path-to-workspace>/install/ign_ros2_control/lib
+export IGN_GAZEBO_SYSTEM_PLUGIN_PATH=$IGN_GAZEBO_SYSTEM_PLUGIN_PATH=:<path-to-workspace>/install/ign_ros2_control/lib
 ```
 This step tells gazebo to look for system plugins inside ```ign_ros2_control/lib``` which is where the ign_ros2_control plugin library is located.
 
