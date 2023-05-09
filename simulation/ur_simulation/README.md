@@ -34,6 +34,11 @@ export IGN_GAZEBO_RESOURCE_PATH="/opt/ros/galactic/share"
 ```
 This step is necessry for gazebo to load resources from the ros2 installed packages.
 
+```bash
+export IGN_GAZEBO_SYSTEM_PLUGIN_PATH==$IGN_GAZEBO_SYSTEM_PLUGIN_PATH=:<path-to-workspace>/install/ign_ros2_control/lib
+```
+This step tells gazebo to look for system plugins inside ```ign_ros2_control/lib``` which is where the ign_ros2_control plugin library is located.
+
 ### Step 3: Source Built Packages
 ``` bash
 source install/setup.bash
@@ -92,9 +97,12 @@ It launches the following component sequentially:
 4. spawn ur5 robot in simulation world
 5. ign_ros_bridges (joint_states, image topics)
 
+### ROS2 Controller
+We use the ```gz_ros2_control``` package to manipulate the simulated ur5 robot. The package is downloaded from [ros-control repo](https://github.com/ros-controls/gz_ros2_control.git) and the source is saved locally.
+Please see the README file in ```gz_ros2_control``` package for detailed tutorial on how to use it. As for now, the ```gz_ros2_control``` is configured and is ready to be used.
+
 ## TODO: 
 - Add gripper to the model
-- Setup controller for UR5 robot in control package
 - Issue: Robotiq does not have ROS2 driver. It is not controlled in real life.
 - Add additional camera on robot hand
 
