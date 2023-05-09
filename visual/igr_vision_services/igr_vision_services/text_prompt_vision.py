@@ -1,10 +1,11 @@
-import os
+import os, sys
 
-import time
 import numpy as np
 import json
 import torch
 from PIL import Image
+
+from torchvision import models
 
 # Grounding DINO
 import torchvision.transforms as T
@@ -19,18 +20,21 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# test
-import skimage
+from ament_index_python.packages import get_package_share_directory
 
-class ZeroShotVision:
+PACKAGE = "igr_vision_services"
+ROOT = get_package_share_directory(PACKAGE)
+CONFIG = "GroundingDINO_SwinT_OGC.py"
+
+class TextPromptVision:
     def __init__(self):
         # params
-        self.config_file = "config/GroundingDINO_SwinT_OGC.py"  # change the path of the model config file
-        self.grounded_checkpoint = "groundingdino_swint_ogc.pth"  # change the path of the model
-        self.sam_checkpoint = "sam_vit_h_4b8939.pth"
+        self.config_file = os.path.join(ROOT, 'config', CONFIG)  # change the path of the model config file
+        self.grounded_checkpoint = os.path.join(ROOT, 'models', 'groundingdino_swint_ogc.pth')  # change the path of the model
+        self.sam_checkpoint = os.path.join(ROOT, "models", "sam_vit_h_4b8939.pth")
         self.input_image = None
         self.text_prompt = None
-        self.output_dir = ""
+        self.output_dir = "vision_outputs"
         self.box_threshold = 0.3
         self.text_threshold = 0.25
 
@@ -39,14 +43,25 @@ class ZeroShotVision:
             self.device = torch.device("cuda")
         else:
             self.device = torch.device("cpu")
+        # self.device = torch.device("cpu")
 
         # load models
+        self.cls_model = models.resnet101(pretrained=True)
+        self.cls_model.eval()
+        self.cls_model.to(self.device)
         self.dino_model = self.load_model()
-        self.sam_predictor = SamPredictor(build_sam(checkpoint=self.sam_checkpoint).to(self.device))
-        # self.sam_predictor = SamPredictor(build_sam(checkpoint=self.sam_checkpoint).to("cpu"))
-        
+        # self.sam_predictor = SamPredictor(build_sam(checkpoint=self.sam_checkpoint).to(self.device))
+        self.sam_predictor = SamPredictor(build_sam(checkpoint=self.sam_checkpoint).to("cpu"))
+
+        # member variables
+        self.last_masks = None
+        self.last_pred_phases = None
+
     def detect(self, image_list, text_prompt_list):
         assert len(image_list) == len(text_prompt_list), "The number of images must match the number of text prompts."
+
+        text_prompt_list = ['.'.join(text_prompt) for text_prompt in text_prompt_list]
+        print(text_prompt_list)
 
         # load images
         image_pil_list = [Image.fromarray(np.uint8(image_np)).convert("RGB") for image_np in image_list]
@@ -74,11 +89,11 @@ class ZeroShotVision:
 
         return final_boxes_filt_list, pred_phrases_list
     
-    def segment(self, image_np, boxes):
-        # boxes = boxes.to("cpu")
+    def segment(self, image_np, boxes, pred_phrases):
+        boxes = boxes.to("cpu")
         self.sam_predictor.set_image(image_np)
         transformed_boxes = self.sam_predictor.transform.apply_boxes_torch(boxes, image_np.shape[:2])
-        # transformed_boxes = transformed_boxes.to("cpu")
+        transformed_boxes = transformed_boxes.to("cpu")
         with torch.no_grad():
             masks, _, _ = self.sam_predictor.predict_torch(
                 point_coords = None,
@@ -86,8 +101,47 @@ class ZeroShotVision:
                 boxes = transformed_boxes,
                 multimask_output = False,
             )
+        masks_save = masks.cpu().numpy()
+        masks_save = masks_save.squeeze(axis=0)
+        self.last_masks = (masks_save * 255).astype(np.uint8)
+        pred_phrases = [phrase.split('(')[0] for phrase in pred_phrases]
+        self.last_pred_phases = pred_phrases
         return masks
     
+    def get_features(self, object):
+        if (self.last_pred_phases is None):
+            raise("No previous segmentation.")
+        try:
+            indices = [i for i, element in enumerate(self.last_pred_phases) if element == object]
+        except ValueError:
+            raise("Given text not in prompt.")
+        centroids = []
+        principal_axes = []
+
+        for index in indices:
+            binary_mask = self.last_masks[index]
+    
+            # Calculate the image moments
+            moments = cv2.moments(binary_mask)
+
+            # Calculate the centroid
+            centroid_x = moments['m10'] / moments['m00']
+            centroid_y = moments['m01'] / moments['m00']
+
+            # Calculate the second-order central moments
+            mu20 = moments['mu20'] / moments['m00']
+            mu02 = moments['mu02'] / moments['m00']
+            mu11 = moments['mu11'] / moments['m00']
+
+            # Calculate the orientation angle (in radians)
+            angle = 0.5 * np.arctan2(2 * mu11, mu20 - mu02)
+
+            # Calculate the unit vector representing the principal axis
+            centroids.append((centroid_x, centroid_y))
+            principal_axes.append((np.cos(angle), np.sin(angle)))
+        return centroids, principal_axes
+
+    # utils
     def draw_detection(self, image, boxes_filt, pred_phrases):
         plt.figure(figsize=(10, 10))
         plt.imshow(image)
@@ -106,20 +160,42 @@ class ZeroShotVision:
             self.show_box(box.numpy(), plt.gca(), label)
         
         plt.axis('off')
-        plt.show()
         if save:
             plt.savefig(
             os.path.join(self.output_dir, output_name), 
             bbox_inches="tight", dpi=300, pad_inches=0.0
             )
             self.save_mask_data(self.output_dir, masks, boxes, pred_phrases)
+        plt.show()
     
-    # utils
+    def draw_features(self, image, centroids, principal_axes):
+        # Convert the image to color if it's grayscale
+        if len(image.shape) == 2 or image.shape[2] == 1:
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+
+        plt.figure(figsize=(10, 10))
+        for centroid, principal_axis in zip(centroids, principal_axes):
+            centroid_x, centroid_y = centroid
+
+            # Draw the centroid as a small circle
+            plt.scatter(centroid_x, centroid_y, s=50, c='g', marker='o')
+
+            # Calculate the start and end points of the principal axis line
+            length = 50  # Length of the principal axis line
+            start_point = (centroid_x - principal_axis[0] * length, centroid_y - principal_axis[1] * length)
+            end_point = (centroid_x + principal_axis[0] * length, centroid_y + principal_axis[1] * length)
+
+            # Draw the principal axis line
+            plt.plot([start_point[0], end_point[0]], [start_point[1], end_point[1]], 'r-', linewidth=2)
+
+        # Display the image with the drawn features
+        plt.imshow(image)
+        plt.show()
+
     def load_model(self):
         args = SLConfig.fromfile(self.config_file)
         args.device = self.device
         model = build_model(args)
-        # checkpoint = torch.load(model_checkpoint_path, map_location="cpu")
         checkpoint = torch.load(self.grounded_checkpoint, map_location=self.device)
         load_res = model.load_state_dict(clean_state_dict(checkpoint["model"]), strict=False)
         model.to(self.device)
@@ -198,34 +274,22 @@ class ZeroShotVision:
         with open(os.path.join(output_dir, 'mask.json'), 'w') as f:
             json.dump(json_data, f)
 
-if __name__=="__main__":
-    vision = ZeroShotVision()
-    # Download sample image
-    image1 = skimage.data.astronaut()
+    def resize_mask(self, mask, square_size=200, isbool=False):
+        # Calculate the scaling factors for width and height
+        height, width = mask.shape[:2]
+        image = (mask * 255).astype(np.uint8)
+        scale_factor = min(square_size / width, square_size / height)
 
-    image2 = skimage.data.coffee()
+        # Calculate the new width and height
+        new_width = int(width * scale_factor)
+        new_height = int(height * scale_factor)
+        resized_image = cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
 
-    image3 = Image.open("test_imgs/balls.jpg")
-    image3 = np.array(image3)
+        if not isbool:
+            resized_mask = (resized_image > 127).astype(int)
+        else:
+            resized_mask = (resized_image > 127).astype(bool)
 
-    text_prompt1 = "human face.rocket.nasa badge.star-spangled banner"
-    text_prompt2 = "coffee mug.plate.spoon"
-    text_prompt3 = "box.black ball"
-
-    start_time = time.time()
-    boxes_filt_list, pred_phrases_list = vision.detect([image1, image2, image3], [text_prompt1, text_prompt2, text_prompt3])
-    print(time.time()-start_time)
-
-    vision.draw_detection(image1, boxes_filt_list[0], pred_phrases_list[0])
-    vision.draw_detection(image2, boxes_filt_list[1], pred_phrases_list[1])
-    vision.draw_detection(image3, boxes_filt_list[2], pred_phrases_list[2])
+        return resized_mask
 
 
-    # masks = vision.segment(image1, boxes_filt_list[0])
-    # vision.draw_segmentation(image1, boxes_filt_list[0], masks, pred_phrases_list[0])
-
-    # masks = vision.segment(image2, boxes_filt_list[1])
-    # vision.draw_segmentation(image2, boxes_filt_list[1], masks, pred_phrases_list[1])
-
-    masks = vision.segment(image3, boxes_filt_list[2])
-    vision.draw_segmentation(image3, boxes_filt_list[2], masks, pred_phrases_list[2])
