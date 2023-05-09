@@ -1,9 +1,6 @@
 # Simulations
 This folder contains all simulations for this project. The simulations world should be as close as possible to the real-world setup, and have exact same control/sensing/comms channels as the real setup.
 
-<img src="https://i.ytimg.com/vi/S4KzVfatZq8/maxresdefault.jpg" width="500">
-<img src="https://user-images.githubusercontent.com/3743196/46572640-18c58f80-c94f-11e8-9533-a3776f47b93a.png" width="500">
+```gz_ros2_control``` folder contains the source of the ```ign_ros2_control``` package which accompdates ROS2 controller usage in the ignition gazebo simulation environment.
 
-## UR5 Pick-and-Place Simulation
-
-## Mobile Robot Simulation
+```ur_simulation``` folder contains ```ur_gazebo``` package which is the ignition gazebo simulation set-up package for ur5. A detailed README file is included in this package.

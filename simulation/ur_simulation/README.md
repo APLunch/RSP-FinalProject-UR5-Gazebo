@@ -22,7 +22,13 @@ UR Simulation is an Ignition Gazebo simulation of a UR5 mainipulator robot with 
 
 ## How-To
 ### Step 0: Install Dependencies
-Dependencies installation will be covered in the project README file
+If not yet installed dependency packages, install all packages using ```rosdep```.
+```bash
+cd <workspace-path>
+rosdep install --from-paths ./ -y --ignore-src
+```
+These command will download and install all dependency packages.
+
 ### Step 1: Build Packages
 ```bash
 colcon build 
@@ -30,20 +36,47 @@ colcon build
 
 ### Step 2: Source Gazebo Resource path
 ```bash
-export IGN_GAZEBO_RESOURCE_PATH="/opt/ros/galactic/share"
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:/opt/ros/galactic/share
 ```
-This step is necessry for gazebo to load resources from the ros2 installed packages.
+This step is necessry for gazebo to load resources from the ros2 directories.
+
+Next we need to set the ```IGN_GAZEBO_SYSTEM_PLUGIN_PATH``` environment variable.
+
+```bash
+export IGN_GAZEBO_SYSTEM_PLUGIN_PATH=$IGN_GAZEBO_SYSTEM_PLUGIN_PATH:<path-to-workspace>/install/ign_ros2_control/lib
+```
+This step tells gazebo to look for system plugins inside ```install/ign_ros2_control/lib``` which is where the ```ign_ros2_control``` plugin library is located.
 
 ### Step 3: Source Built Packages
 ``` bash
 source install/setup.bash
 ```
 
-### Step 3: Launch Simulation
+### Step 4: Launch Simulation
 ```bash
 ros2 launch ur_gazebo ur_simulation.launch.py
 ```
-A Gazebo smulation and a Rviz window with 2 camera windows should pop up.
+A Gazebo smulation and a Rviz window with 2 camera windows should pop up. 
+
+### Step 4.1: Start ROS2 Controller and Test (Optional)
+Open a new terminal inside the workspace.
+Start the ros2 controller 
+```bash
+ros2 control load_controller --set-state start ur5_controller
+```
+You should see a message for a successful controller initiation.
+
+Then we publish a message to the position controller topic to let the controller move the robot to desired joint positions
+```bash
+ros2 topic pub /ur5_controller/commands std_msgs/msg/Float64MultiArray "layout:
+  dim:
+  - label: ''
+    size: 0
+    stride: 0
+  data_offset: 0
+data: [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0]"
+```
+The robot should then move to the commanded location.
  
 ## Details - ur_gazebo Package
 ```ur_gazebo``` contains the simulation world description files (sdf) and the associated launch files.
@@ -92,9 +125,12 @@ It launches the following component sequentially:
 4. spawn ur5 robot in simulation world
 5. ign_ros_bridges (joint_states, image topics)
 
+### ROS2 Controller
+We use the ```gz_ros2_control``` package to manipulate the simulated ur5 robot. The package is downloaded from [ros-control repo](https://github.com/ros-controls/gz_ros2_control.git) and the source is saved locally.
+Please see the README file in ```gz_ros2_control``` package for detailed tutorial on how to use it. As for now, the ```gz_ros2_control``` is configured and is ready to be used.
+
 ## TODO: 
 - Add gripper to the model
-- Setup controller for UR5 robot in control package
 - Issue: Robotiq does not have ROS2 driver. It is not controlled in real life.
 - Add additional camera on robot hand
 
