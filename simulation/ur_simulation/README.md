@@ -30,6 +30,11 @@ rosdep install --from-paths ./ -y --ignore-src
 These command will download and install all dependency packages.
 
 ### Step 1: Build Packages
+Before building the packages, we need to let the ```gz_ros2_control``` package acknowledge the version of Ignition Gazebo we are using (which is fortress) to ensure the plugin is built for with the correct version. 
+```bash
+export IGNITION_VERSION=fortress
+```
+Then we can proceed to build the packages.
 ```bash
 colcon build 
 ```
