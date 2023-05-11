@@ -70,10 +70,10 @@ def main(args=None):
     text_prompt_vision_client = TextPromptVisionTestClient("/image1", "/image2")
 
     # Create a text prompt
-    text_prompt = "robot arm"
+    text_prompt = "bright red gripper"
 
     # Call the service
-    response = text_prompt_vision_client.call_service(text_prompt, topic_id=1)
+    response = text_prompt_vision_client.call_service(text_prompt, topic_id=0)
 
     if response:
         print("Service response:")

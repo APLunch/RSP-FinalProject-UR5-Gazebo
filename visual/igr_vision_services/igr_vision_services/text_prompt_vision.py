@@ -56,6 +56,7 @@ class TextPromptVision:
         # member variables
         self.last_masks = None
         self.last_pred_phases = None
+        self.last_scores = None
 
     def detect(self, image_list, text_prompt_list):
         assert len(image_list) == len(text_prompt_list), "The number of images must match the number of text prompts."
@@ -102,10 +103,13 @@ class TextPromptVision:
                 multimask_output = False,
             )
         masks_save = masks.cpu().numpy()
-        masks_save = masks_save.squeeze(axis=0)
+        if len(masks_save.shape)==3:
+            masks_save = masks_save.squeeze(axis=0)
+        elif len(masks_save.shape)==4:
+            masks_save = masks_save.squeeze()
         self.last_masks = (masks_save * 255).astype(np.uint8)
-        pred_phrases = [phrase.split('(')[0] for phrase in pred_phrases]
-        self.last_pred_phases = pred_phrases
+        self.last_pred_phases = [phrase.split('(')[0] for phrase in pred_phrases]
+        self.last_scores = list(map(float, [phrase[:-1].split('(')[1] for phrase in pred_phrases]))
         return masks
     
     def get_features(self, object):

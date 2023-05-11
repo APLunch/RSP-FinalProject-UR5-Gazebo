@@ -20,12 +20,18 @@ class TextPromptVisionNode(Node):
         boxes, pred_phrases = self.text_prompt_vision.detect([image_np], [[request.text_prompt]])
         # masks, binary_masks, labels = self.text_prompt_vision.segment(image_np, boxes[0], pred_phrases[0])
         masks = self.text_prompt_vision.segment(image_np, boxes[0], pred_phrases[0])
-        self.text_prompt_vision.draw_segmentation(image_np, boxes[0], masks, pred_phrases[0])
+        # self.text_prompt_vision.draw_segmentation(image_np, boxes[0], masks, pred_phrases[0])
+        
+        # **** TEST ONLY ****
+        self.text_prompt_vision.draw_segmentation(image_np, [boxes[0][0]], [masks[0]], [pred_phrases[0][0]])
 
         # Get the features
         # centroids, principal_axes = self.text_prompt_vision.get_features(request.text_prompt, binary_masks, labels)
         centroids, principal_axes = self.text_prompt_vision.get_features(request.text_prompt)
-        self.text_prompt_vision.draw_features(image_np, centroids, principal_axes)
+        # self.text_prompt_vision.draw_features(image_np, centroids, principal_axes)
+
+        # **** TEST ONLY ****
+        self.text_prompt_vision.draw_features(image_np, [centroids[0]], [principal_axes[0]])
 
         # Fill the response with the features
         for centroid, principal_axis in zip(centroids, principal_axes):
