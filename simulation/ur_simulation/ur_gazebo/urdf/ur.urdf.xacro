@@ -88,8 +88,13 @@
      <origin xyz="0 0 0" rpy="0 0 0" />          <!-- position robot in the world -->
    </xacro:ur_robot>
 
+  <!-- include gripper xacro file -->
+  <xacro:include filename="$(find ur_gazebo)/urdf/robotiq_gripper.xacro" />
+  <!-- gripper -->
+  <xacro:robotiq_gripper mount="tool0">  <!-- attach to tool0 -->
+  </xacro:robotiq_gripper>
    
-   <xacro:if value="$(arg sim_gazebo)">
+  <xacro:if value="$(arg sim_gazebo)">
     <!-- Gazebo plugins -->
     <gazebo reference="world">
     </gazebo>
@@ -101,36 +106,7 @@
   </xacro:if>
     
   <xacro:if value="$(arg sim_ignition)">
-    <!-- Gazebo plugins -->
-    <!-- This seems to be working only with edifice not fortress.
-    <gazebo reference="world">
-    </gazebo>
-    <gazebo>
-      <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-        <parameters>$(arg simulation_controllers)</parameters>
-        <controller_manager_node_name>$(arg prefix)controller_manager</controller_manager_node_name>
-      </plugin>
-    </gazebo>
-    -->
-
-<!-- This block does seem necessary for the ignition simulation + ros2_conrol to work
-  <ros2_control name="IgnitionSystem" type="system">
-    <hardware>
-      <plugin>ign_ros2_control/IgnitionSystem</plugin>
-    </hardware>
-    <joint name="shoulder_pan_joint">
-      <command_interface name="position">
-        <param name="min">-3.1415926</param>
-        <param name="max">3.1415926</param>
-      </command_interface>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
-
-  </ros2_control>
--->
-
+  
   <gazebo>
     <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
       <robot_param>robot_description</robot_param>
@@ -147,6 +123,5 @@
   <gazebo>
       <plugin filename="libignition-gazebo-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher"/>
   </gazebo>
-
 
 </robot>

@@ -1,0 +1,318 @@
+ <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robotiq_arg85_description" >
+    <xacro:macro name="robotiq_gripper" params="mount">  
+        <link name="robotiq_85_base_link">
+            <inertial>
+            <origin
+                xyz="0.00021987 -2.3546E-10 0.030163"
+                rpy="0 0 0" />
+            <mass
+                value="0.30915" />
+            <inertia
+                ixx="0.00028972"
+                ixy="-5.7879E-10"
+                ixz="-1.8543E-06"
+                iyy="0.00030737"
+                iyz="1.682E-12"
+                izz="0.00019914" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/robotiq_85_base_link_fine.STL"/>
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.1 0.1 0.1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/robotiq_85_base_link_coarse.STL" />
+            </geometry>
+            </collision>
+        </link>
+        
+        <link
+            name="left_inner_knuckle">
+            <inertial>
+            <origin
+                xyz="0.017097546626628 -3.93808524389535E-10 0.0224918438201868"
+                rpy="0 0 0" />
+            <mass
+                value="0.0110930853895903" />
+            <inertia
+                ixx="4.23392770691541E-06"
+                ixy="5.748978936968E-15"
+                ixz="1.78855677119788E-06"
+                iyy="3.96548790524392E-06"
+                iyz="1.05464666369669E-14"
+                izz="3.24068002883007E-06" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_knuckle_fine.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.1 0.1 0.1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_knuckle_coarse.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="left_inner_knuckle_joint"
+            type="revolute">
+            <origin
+            xyz="0.0127000000001501 0 0.0693074999999639"
+            rpy="0 0 0" />
+            <parent
+            link="robotiq_85_base_link" />
+            <child
+            link="left_inner_knuckle" />
+            <axis
+            xyz="0 -1 0" />
+            <limit
+            lower="-0.5"
+            upper="0.5"
+            velocity="2.0"
+            effort="1000" />
+        </joint>
+
+        
+
+        <link
+            name="left_inner_finger">
+            <inertial>
+            <origin
+                xyz="0.0060275613594574 -6.29183141465421E-15 0.00669925693133241"
+                rpy="0 0 0" />
+            <mass
+                value="0.00724255346165745" />
+            <inertia
+                ixx="1.47824274053603E-06"
+                ixy="-3.94884463570303E-19"
+                ixz="-3.45268847648622E-07"
+                iyy="1.70064480838395E-06"
+                iyz="3.5059838910097E-19"
+                izz="4.77151336838364E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_finger_fine.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.1 0.1 0.1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_finger_coarse.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="left_inner_finger_joint"
+            type="fixed">
+            <origin
+            xyz="0.034585310861294 0 0.0454970193817975"
+            rpy="0 0 0" />
+            <parent
+            link="left_inner_knuckle" />
+            <child
+            link="left_inner_finger" />
+            <axis
+            xyz="0 -1 0" />
+            <limit
+            lower="0"
+            upper="0.8757"
+            velocity="2.0"
+            effort="1000" />
+        </joint>
+        <link
+            name="right_inner_knuckle">
+            <inertial>
+            <origin
+                xyz="0.0168606186773776 3.93808471820465E-10 0.0226699950793434"
+                rpy="0 0 0" />
+            <mass
+                value="0.0110930853895903" />
+            <inertia
+                ixx="4.27134775939882E-06"
+                ixy="-8.53568456728898E-15"
+                ixz="1.77774229944246E-06"
+                iyy="3.96548790524392E-06"
+                iyz="-8.45108024914164E-15"
+                izz="3.20325997634666E-06" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_knuckle_fine.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.1 0.1 0.1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_knuckle_coarse.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="right_inner_knuckle_joint"
+            type="revolute">
+            <origin
+            xyz="-0.0126999999998499 0 0.0693075000000361"
+            rpy="0 0 3.14159265358979" />
+            <parent
+            link="robotiq_85_base_link" />
+            <child
+            link="right_inner_knuckle" />
+            <axis
+            xyz="0 -1 0" />
+            <limit
+            lower="-0.5"
+            upper="0.5"
+            velocity="2.0"
+            effort="1000" />
+        </joint>
+        <link
+            name="right_inner_finger">
+            <inertial>
+            <origin
+                xyz="0.00602756228812038 -6.47284509480176E-15 0.00669925609578108"
+                rpy="0 0 0" />
+            <mass
+                value="0.00724255346165744" />
+            <inertia
+                ixx="1.47824283625957E-06"
+                ixy="-3.95952064019123E-19"
+                ixz="-3.45268708875543E-07"
+                iyy="1.70064480838394E-06"
+                iyz="3.55286507960029E-19"
+                izz="4.77151241114822E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_finger_fine.STL" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.1 0.1 0.1 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="file://$(find ur_gazebo)/meshes/inner_finger_coarse.STL" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="right_inner_finger_joint"
+            type="fixed">
+            <origin
+            xyz="0.0341060475457406 0 0.0458573878541688"
+            rpy="0 0 0" />
+            <parent
+            link="right_inner_knuckle" />
+            <child
+            link="right_inner_finger" />
+            <axis
+            xyz="0 1 0" />
+            <limit
+            lower="0"
+            upper="0.8757"
+            velocity="2.0"
+            effort="1000" />
+        </joint>
+        
+        
+        <!-- Fix the gripper (base link) to mount (given by xacro parameter) with a fixed joint-->
+        <joint
+            name="robotiq_85_base_link_to_parent"
+            type="fixed">
+            <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+            <parent
+            link="${mount}" />
+            <child
+            link="robotiq_85_base_link" />
+            <axis
+            xyz="0 0 0" />
+        </joint>
+
+        <!-- Add ros2 control configurations-->
+        <ros2_control name="IgnitionSystem" type="system">
+            <hardware>
+                <plugin>ign_ros2_control/IgnitionSystem</plugin>
+            </hardware>
+            <joint name="left_inner_knuckle_joint">
+                <command_interface name="position">
+                    <param name="min">-0.5</param>
+                    <param name="max">0.5</param>
+                </command_interface>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+        </ros2_control>
+
+        <ros2_control name="IgnitionSystem" type="system">
+            <hardware>
+                <plugin>ign_ros2_control/IgnitionSystem</plugin>
+            </hardware>
+            <joint name="right_inner_knuckle_joint">
+                <command_interface name="position">
+                    <param name="min">-0.5</param>
+                    <param name="max">0.5</param>
+                </command_interface>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+        </ros2_control>
+
+    </xacro:macro>
+
+</robot>

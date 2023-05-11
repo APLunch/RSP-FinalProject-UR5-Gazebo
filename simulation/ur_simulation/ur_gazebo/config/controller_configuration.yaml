@@ -18,6 +18,8 @@ ur5_controller:
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
+      - left_inner_knuckle_joint
+      - right_inner_knuckle_joint
     command_interfaces:
       - position
     state_interfaces:
@@ -30,6 +32,8 @@ ur5_controller:
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
+      - left_inner_knuckle_joint
+      - right_inner_knuckle_joint
 
 ur5_controller_trajectory:
   ros__parameters:
