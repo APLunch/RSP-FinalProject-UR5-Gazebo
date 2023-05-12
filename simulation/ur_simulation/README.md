@@ -116,6 +116,11 @@ The urdf file for the robot is generated from a modified ur xacro file  ```urdf/
 
 The modified robot description includes gazebo joint state publisher plugin to accomodate visualization is Rviz.
 
+In addition, a modified robotiq 2f 85 gripper is attached to the ```tool0``` frame of the robot. The description of the gripper is in ```ur_gazebo/urdf/robotiq_gripper.xacro```.
+More specifically, the gripper's parallel structure is removed to acccomodate urdf which only support serial robotic structures. The fingers of the 2f gripper is no longer parallel but a pillar style instead.
+
+<img src="https://github.com/APLunch/Intelligent-General-Robot/assets/60408626/93e5d3dd-104d-4e57-966a-8fc07a9a9e40" width = 400>
+
 ### Cameras in Simulation World
 <img src="https://user-images.githubusercontent.com/60408626/233908460-98a723db-387c-4975-946f-dd3a2273b281.png" width = 400>
 
@@ -137,5 +142,5 @@ Please see the README file in ```gz_ros2_control``` package for detailed tutoria
 
 ## TODO: 
 - Issue: Robotiq does not have ROS2 driver. It is not controlled in real life.
-- Add additional camera on robot hand
+- Add additional depth camera on camera3
 
