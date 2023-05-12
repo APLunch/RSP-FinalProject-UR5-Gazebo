@@ -168,6 +168,14 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Create ign ros bridge for /image2 topic
+    ign_ros_bridge_image3 = Node(
+        package='ros_ign_bridge',
+        executable='parameter_bridge', 
+        arguments=['/image3@sensor_msgs/msg/Image@ignition.msgs.Image'],
+        output='screen'
+    )
+
     return LaunchDescription([
         #ur5_launch, #This launches the original ur5 description
         *declared_arguments,
@@ -177,5 +185,6 @@ def generate_launch_description():
         spawn_robot,
         ign_ros_bridge_joint_states,
         ign_ros_bridge_image1,
-        ign_ros_bridge_image2
+        ign_ros_bridge_image2,
+        ign_ros_bridge_image3
     ])

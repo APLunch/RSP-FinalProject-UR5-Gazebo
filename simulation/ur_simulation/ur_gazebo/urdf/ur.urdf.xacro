@@ -93,6 +93,13 @@
   <!-- gripper -->
   <xacro:robotiq_gripper mount="tool0">  <!-- attach to tool0 -->
   </xacro:robotiq_gripper>
+
+  <!-- include ur_sim_camera xacro file-->
+  <xacro:include filename="$(find ur_gazebo)/urdf/ur_sim_camera.xacro" />
+  <!-- camera mount on wrist3 -->
+  <xacro:ur_sim_camera name="camera3" parent="wrist_3_link">
+    <origin xyz="0.0 -0.05 0.0" rpy="0.0 0.0 0.0" />
+  </xacro:ur_sim_camera>
    
   <xacro:if value="$(arg sim_gazebo)">
     <!-- Gazebo plugins -->
