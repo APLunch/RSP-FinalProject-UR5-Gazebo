@@ -121,6 +121,8 @@ More specifically, the gripper's parallel structure is removed to acccomodate ur
 
 <img src="https://github.com/APLunch/Intelligent-General-Robot/assets/60408626/93e5d3dd-104d-4e57-966a-8fc07a9a9e40" width = 400>
 
+As for the controller for the gripper, the two fingers of the grippers are controller separately as joint 7 and joint 8.
+
 ### Cameras in Simulation World
 <img src="https://user-images.githubusercontent.com/60408626/233908460-98a723db-387c-4975-946f-dd3a2273b281.png" width = 400>
 
