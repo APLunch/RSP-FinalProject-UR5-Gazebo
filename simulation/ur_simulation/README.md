@@ -79,8 +79,9 @@ ros2 topic pub /ur5_controller/commands std_msgs/msg/Float64MultiArray "layout:
     size: 0
     stride: 0
   data_offset: 0
-data: [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0]"
+data: [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 0.3, 0.3]"
 ```
+The above example sets 6 joints of the ur5 to -1.0 rads, and each gripper finger joint to 0.3 rad.
 The robot should then move to the commanded location.
  
 ## Details - ur_gazebo Package
@@ -135,7 +136,6 @@ We use the ```gz_ros2_control``` package to manipulate the simulated ur5 robot. 
 Please see the README file in ```gz_ros2_control``` package for detailed tutorial on how to use it. As for now, the ```gz_ros2_control``` is configured and is ready to be used.
 
 ## TODO: 
-- Add gripper to the model
 - Issue: Robotiq does not have ROS2 driver. It is not controlled in real life.
 - Add additional camera on robot hand
 
