@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://wiki.ros.org/xacro" name="$(arg name)">
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur">
    <!-- robot name parameter -->
    <xacro:arg name="name" default="ur"/>
    <!-- import main macro -->
@@ -7,7 +7,7 @@
 
    <!-- possible 'ur_type' values: ur3, ur3e, ur5, ur5e, ur10, ur10e, ur16e -->
    <!-- the default value should raise an error in case this was called without defining the type -->
-   <xacro:arg name="ur_type" default="ur5x"/>
+   <xacro:arg name="ur_type" default="ur5"/>
 
    <!-- parameters -->
    <xacro:arg name="prefix" default="" />
@@ -100,6 +100,9 @@
   <xacro:ur_sim_camera name="camera3" parent="wrist_3_link">
     <origin xyz="0.0 -0.05 0.0" rpy="0.0 0.0 0.0" />
   </xacro:ur_sim_camera>
+  <xacro:ur_depth_camera name="camera3_depth" parent="wrist_3_link">
+    <origin xyz="0.0 -0.05 0.0" rpy="0.0 0.0 0.0" />
+  </xacro:ur_depth_camera>
    
   <xacro:if value="$(arg sim_gazebo)">
     <!-- Gazebo plugins -->

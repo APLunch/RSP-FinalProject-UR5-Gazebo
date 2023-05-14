@@ -168,11 +168,12 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Create ign ros bridge for /image2 topic
+    # Create ign ros bridge for /image3 topic
     ign_ros_bridge_image3 = Node(
         package='ros_ign_bridge',
         executable='parameter_bridge', 
-        arguments=['/image3@sensor_msgs/msg/Image@ignition.msgs.Image'],
+        arguments=['/rgbd_camera/image@sensor_msgs/msg/Image@ignition.msgs.Image',
+                   '/rgbd_camera/depth_image@sensor_msgs/msg/Image@ignition.msgs.Image'],
         output='screen'
     )
 
