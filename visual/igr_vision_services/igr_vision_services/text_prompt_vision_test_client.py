@@ -7,44 +7,49 @@ from sensor_msgs.msg import Image
 import numpy as np
 
 class TextPromptVisionTestClient(Node):
-    def __init__(self, image_topic0="/image_topic", image_topic1=None):
+    def __init__(self):
         super().__init__("text_prompt_vision_test_client")
+        self.declare_parameter('image_topic', '/image1')
+        self.declare_parameter('image_topic2', '/image2')
+        self.declare_parameter('text_prompt', 'red ball')
+
+        self.image_topic = self.get_parameter('image_topic').value
+        self.image_topic2 = self.get_parameter('image_topic2').value
+        self.text_prompt = self.get_parameter('text_prompt').value
+
         self.cli = self.create_client(GetFeatures, "get_features")
-        self.sub0 = self.create_subscription(
-            Image, image_topic0, self.image_callback0, 100)
-        self.latest_image_np0 = None
-        if image_topic1 is not None:
-            self.sub1 = self.create_subscription(
-                Image, image_topic1, self.image_callback1, 100)
-            self.latest_image_np1 = None
+        self.sub = self.create_subscription(
+            Image, self.image_topic, self.image_callback, 100)
+        self.latest_image_np = None
+        if self.image_topic2 is not None:
+            self.sub2 = self.create_subscription(
+                Image, self.image_topic2, self.image_callback2, 100)
+            self.latest_image_np2 = None
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("Waiting for 'get_features' service to become available...")
 
-    def image_callback0(self, msg):
+    def image_callback(self, msg):
         # Convert the ROS Image message to a NumPy array
-        self.latest_image_np0 = np.array(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1)
+        self.latest_image_np = np.array(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1)
     
-    def image_callback1(self, msg):
+    def image_callback2(self, msg):
         # Convert the ROS Image message to a NumPy array
-        self.latest_image_np1 = np.array(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1)
+        self.latest_image_np2 = np.array(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1)
 
-    def call_service(self, text_prompt, topic_id=0):
+    def call_service(self):
         # Convert the NumPy array to a ROS Image message
         self.get_logger().info("Waiting for image ...")
-        if topic_id==0:
-            while self.latest_image_np0 is None:
-                rclpy.spin_once(self, timeout_sec=0.01)
-            image = self.latest_image_np0
-        elif topic_id==1:
-            while self.latest_image_np1 is None :
-                rclpy.spin_once(self, timeout_sec=0.01)
-            image = self.latest_image_np1
+
+        while self.latest_image_np is None:
+            rclpy.spin_once(self, timeout_sec=0.01)
+        image = self.latest_image_np
+    
         self.get_logger().info("Image received.")
 
         # Create a request
         request = GetFeatures.Request()
         request.image = self.image_msg_from_numpy(image)
-        request.text_prompt = text_prompt
+        request.text_prompt = self.text_prompt
 
         # Call the service
         future = self.cli.call_async(request)
@@ -67,13 +72,10 @@ class TextPromptVisionTestClient(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    text_prompt_vision_client = TextPromptVisionTestClient("/image1", "/image2")
-
-    # Create a text prompt
-    text_prompt = "bright red gripper"
+    text_prompt_vision_client = TextPromptVisionTestClient()
 
     # Call the service
-    response = text_prompt_vision_client.call_service(text_prompt, topic_id=0)
+    response = text_prompt_vision_client.call_service()
 
     if response:
         print("Service response:")

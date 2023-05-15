@@ -172,8 +172,14 @@ def generate_launch_description():
     ign_ros_bridge_image3 = Node(
         package='ros_ign_bridge',
         executable='parameter_bridge', 
-        arguments=['/rgbd_camera/image@sensor_msgs/msg/Image@ignition.msgs.Image',
-                   '/rgbd_camera/depth_image@sensor_msgs/msg/Image@ignition.msgs.Image'],
+        arguments=['/world/ur_simulation_world/model/ur5/link/wrist_3_link/sensor/camera3/image@sensor_msgs/msg/Image@ignition.msgs.Image',
+                   '/world/ur_simulation_world/model/ur5/link/wrist_3_link/sensor/camera3_depth/depth_image@sensor_msgs/msg/Image@ignition.msgs.Image',
+                   '/world/ur_simulation_world/model/ur5/link/wrist_3_link/sensor/camera3_depth/depth_image/points@sensor_msgs/msg/PointCloud2@ignition.msgs.PointCloudPacked'],
+        remappings=[
+                ('/world/ur_simulation_world/model/ur5/link/wrist_3_link/sensor/camera3/image', '/rgbd_camera/image'),
+                ('/world/ur_simulation_world/model/ur5/link/wrist_3_link/sensor/camera3_depth/depth_image', '/rgbd_camera/depth_image'),
+                ('/world/ur_simulation_world/model/ur5/link/wrist_3_link/sensor/camera3_depth/depth_image/points', '/rgbd_camera/points'),
+            ],
         output='screen'
     )
 

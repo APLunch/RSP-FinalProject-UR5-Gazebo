@@ -45,7 +45,6 @@
                 <always_on>1</always_on>
                 <update_rate>30</update_rate>
                 <visualize>true</visualize>
-                <topic>/rgbd_camera/image</topic>
             </sensor>
         </gazebo> 
 
@@ -90,29 +89,26 @@
         <joint name="RGBD_optical_joint" type="fixed">
             <parent link="camera_depth_body"/>
             <child link="RGBD_optical_link"/>
-            <origin xyz="0 0 0" rpy="-1.5707 -1.5707 3.14159"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </joint>  
         
         <gazebo reference="camera_depth_body">
-            <sensor name="${name}" type="depth">
+            <sensor name="${name}" type="depth_camera">
                 <pose>0 0 0 -1.5707 -1.5707 3.14159</pose>
                 <camera>
                     <horizontal_fov>1.047</horizontal_fov>
                     <image>
                         <width>960</width>
                         <height>720</height>
-                        <format>R_FLOAT32</format>
-                        <!-- <format>R8G8B8</format> -->
                     </image>
                     <clip>
                         <near>0.02</near>
-                        <far>2</far>
+                        <far>300</far>
                     </clip>
                 </camera>
                 <always_on>1</always_on>
                 <update_rate>30</update_rate>
                 <visualize>true</visualize>
-                <topic>/rgbd_camera/depth_image</topic>
             </sensor>
         </gazebo> 
         

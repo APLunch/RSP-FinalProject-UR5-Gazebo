@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
+from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
 from vision_interfaces.srv import GetFeatures
 from igr_vision_services.text_prompt_vision import TextPromptVision
@@ -39,7 +40,7 @@ class TextPromptVisionNode(Node):
             response.centroid_y.append(centroid[1])
             response.principal_axis_x.append(principal_axis[0])
             response.principal_axis_y.append(principal_axis[1])
-
+        self.get_logger().info("Done feature extraction service call.")
         return response
 
 def main(args=None):
@@ -48,8 +49,9 @@ def main(args=None):
     text_prompt_vision_node = TextPromptVisionNode()
 
     # Start the service
-    print("TextPromptVision service is running.")
-    rclpy.spin(text_prompt_vision_node)
+    text_prompt_vision_node.get_logger().info("Feature extraction service is running.")
+    executor = MultiThreadedExecutor()
+    rclpy.spin(text_prompt_vision_node, executor=executor)
 
     # Cleanup
     rclpy.shutdown()

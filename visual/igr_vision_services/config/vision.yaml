@@ -1,0 +1,17 @@
+stereo_vision_service:
+  ros__parameters:
+    RGB_image_topic:
+      "/rgbd_camera/image"
+    depth_image_topic:
+      "/rgbd_camera/depth_image"
+    camera_optical_frame:
+      "RGBD_optical_link"
+    reference_frame:
+      "world"
+    simulation_on:
+      True
+    camera_intrinsic:
+      cx: 480.0
+      cy: 360.0
+      fx: 831.57 # fx = width / (2 * tan(horizontal_fov / 2))
+      fy: 831.57
