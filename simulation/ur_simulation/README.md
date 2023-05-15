@@ -79,7 +79,8 @@ ros2 topic pub /ur5_controller/commands std_msgs/msg/Float64MultiArray "layout:
     size: 0
     stride: 0
   data_offset: 0
-data: [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 0.3, 0.3]"
+data: [0.1, -1.0, -1.5, -1.8, 1.5, 0.0, 0.1, 0.1]"
+
 ```
 The above example sets 6 joints of the ur5 to -1.0 rads, and each gripper finger joint to 0.3 rad.
 The robot should then move to the commanded location.
