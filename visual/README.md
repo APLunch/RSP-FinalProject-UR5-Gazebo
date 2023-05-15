@@ -77,7 +77,7 @@ That will extract features with the text prompt "red ball" in the view given by 
 The _stereo vision test client_ takes a text prompt, publishs the transforms of all possible objects match that text prompt into the tf2_ros tree. The resulting transforms can be viewed in Rviz. To run,
 
 ```bash
-ros2 run igr_vision_services stereo_vision_test_client -p text_prompt:="blue ball"
+ros2 run igr_vision_services stereo_vision_test_client --ros-args -p text_prompt:="blue ball"
 ```
 
 Transforms corresponds to the text prompt "blue ball" will be published.
