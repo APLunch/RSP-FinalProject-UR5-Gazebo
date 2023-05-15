@@ -1,6 +1,6 @@
 # IGR Visions 
 
-Classical and deep learning based computer vision packages for vision-guided robot manipulation. An RGBD camera is mounted on the end effector of the UR5. We used Segment Anything Model (SAM) with Grounding DINO to detect and segment object given text prompt in the RGB image view. Useful features are extracted from the detection bounding boxes and segmentation masks. The depth image is then utilized to find the 3D position of the object. Either a simple feedforward motion or a visual servoing control can be applied for the manipulation task followed.
+Classical and deep learning based computer vision packages for vision-guided robot manipulation. An RGBD camera is mounted on the end effector of the UR5. We used Segment Anything Model (SAM) with Grounding DINO to detect and segment object given text prompt in the RGB image view. Useful features are extracted from the detection bounding boxes and segmentation masks. The depth image is then utilized to find the 3D position of the object. Either a simple feedforward motion or a visual servoing control can be applied for potential manipulation taskd followed.
 
 
 ## Installation
