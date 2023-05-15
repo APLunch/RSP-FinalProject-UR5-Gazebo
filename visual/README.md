@@ -58,6 +58,8 @@ The following command starts _feature extraction service_ and _Stereo vision ser
 ros2 launch igr_vision_services vision.launch.py
 ```
 
+It'll take some time to load and warmup the neural network models, especially when GPU is not available. ROS messages will show up in the command window when services are ready.
+
 ### Run test clients
 
 **Feature Extraction**
