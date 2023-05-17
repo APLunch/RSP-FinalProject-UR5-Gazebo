@@ -27,3 +27,6 @@ The components (folders) of this project are listed as follow:
 
 ## How-To
 1. Install ROS2 galactic following [this link](https://docs.ros.org/en/galactic/Installation.html).
+
+## Resources
+[How to setup moveit for ros2 foxy](https://industrial-training-master.readthedocs.io/en/foxy/_source/session3/ros2/3-Build-a-MoveIt-Package.html) (Works for galactic as well).
