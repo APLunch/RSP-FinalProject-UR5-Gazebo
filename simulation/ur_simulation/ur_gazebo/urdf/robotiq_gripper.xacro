@@ -265,40 +265,6 @@
             velocity="2.0"
             effort="1000" />
         </joint>
-
-        <!-- Add a fixed gripper_pick frame between the left finger and right finger-->
-        <link name = "gripper_pick">
-            <inertial>
-            <origin
-                xyz="0 0 0"
-                rpy="0 0 0" />
-            <mass
-                value="0.01" />
-            <inertia
-                ixx="0.001"
-                ixy="0.001"
-                ixz="0.00"
-                iyy="0.00"
-                iyz="0.00"
-                izz="0.00" />
-            </inertial>
-        </link>
-        <joint name="gripper_pick_joint" type="fixed">
-            <origin
-            xyz="0 0 0.13"
-            rpy="0 0 0" />
-            <parent
-            link="tool0" />
-            <child
-            link="gripper_pick" />
-            <axis
-            xyz="0 1 0" />
-            <limit
-            lower="0"
-            upper="0.8757"
-            velocity="2.0"
-            effort="1000" />
-        </joint>
         
         
         <!-- Fix the gripper (base link) to mount (given by xacro parameter) with a fixed joint-->

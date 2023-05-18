@@ -1,7 +1,0 @@
-string text_prompt
-sensor_msgs/Image image
----
-float64[] centroid_x
-float64[] centroid_y
-float64[] principal_axis_x
-float64[] principal_axis_y

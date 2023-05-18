@@ -7,8 +7,6 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
 
 
 # install launch files
@@ -34,14 +32,6 @@ install(DIRECTORY meshes
 #install config files
 install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
-)
-
-# Declare executable
-add_executable(joint_state_mirror src/joint_state_mirror.cpp)
-ament_target_dependencies(joint_state_mirror rclcpp sensor_msgs)
-#install executable
-install(TARGETS joint_state_mirror
-  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

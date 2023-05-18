@@ -12,7 +12,6 @@
   <depend> ur_description </depend>
   <depend> ign_ros2_control </depend>
   <depend> rclcpp </depend>
-  <depend> rclpy </depend>
   <depend> urdf</depend>
   <depend> robot_state_publisher</depend>
   <depend> joint_state_publisher_gui</depend>
@@ -22,6 +21,7 @@
   <depend> ros_ign </depend>
   <depend> ros_ign_image </depend>
 
+  <exec_depend>rclpy</exec_depend>
   
 
   <test_depend>ament_lint_auto</test_depend>

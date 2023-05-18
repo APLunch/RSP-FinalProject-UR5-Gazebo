@@ -1,0 +1,23 @@
+import("rtt_ros2")
+import("rtt_ros2_node")
+import("rtt_ros2_topics")
+import("rtt_ros2_params")
+import("rtt_ros2_geometry_msgs")
+import("rtt_ros2_sensor_msgs")
+import("rtt_ros2_services")
+import("kdl_typekit")
+import("rtt_ur_trajectory")
+import("rtt_ros2_std_msgs")
+
+ros.create_named_node("rtt")
+
+loadComponent("robot", "rtt_robot")
+
+setActivity("robot", 0.01, 0, ORO_SCHED_OTHER)
+
+stream("robot.MsrCartPose", ros.topic("/robot/frame", true))
+stream("robot.MsrJntPos", ros.topic("/robot/joint", true))
+stream("robot.CtrJoint", ros.topic("/ur5_controller/commands", true))
+
+robot.configure()
+robot.start()

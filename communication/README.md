@@ -31,5 +31,3 @@ STEP 5: Run the Bridge node
 ros2 run gpt_bridge gpt_bridge_node
 
 
-
-Unfinished: The command to execute the controller in gpt_bridge_node.cpp

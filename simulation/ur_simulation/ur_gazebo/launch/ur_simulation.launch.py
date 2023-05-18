@@ -110,13 +110,13 @@ def generate_launch_description():
         prefix,
     ]
     )
+    robot_description = {"robot_description": robot_description_content}
     # UR5 Robot State Publisher
     robot_state_publisher_node = Node(
-        name="robot_state_publisher",
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="both",
-        parameters=[{"robot_description": robot_description_content, "use_sim_time": True}],
+        parameters=[robot_description],
         remappings=[("/joint_states", "/world/ur_simulation_world/model/ur5/joint_state")],
     )
     # RViz2 Node with UR5
@@ -133,7 +133,7 @@ def generate_launch_description():
 
     # Start Gezbo world
     gazebo = ExecuteProcess( 
-        cmd=['ign','gazebo', '-v4' ,FindPackageShare(package='ur_gazebo').find("ur_gazebo")+ "/world/ur_simulation_world.sdf"],
+        cmd=['ign','gazebo',FindPackageShare(package='ur_gazebo').find("ur_gazebo")+ "/world/ur_simulation_world.sdf"],
         output='screen'
     )
 
@@ -146,7 +146,6 @@ def generate_launch_description():
 
     #Create ign ros bridge for joint state publisher
     ign_ros_bridge_joint_states = Node(
-        name='ign_ros_bridge_joint_states',
         package='ros_ign_bridge',
         executable='parameter_bridge',
         arguments=['/world/ur_simulation_world/model/ur5/joint_state@sensor_msgs/msg/JointState@ignition.msgs.Model'],
@@ -155,7 +154,6 @@ def generate_launch_description():
 
     # Create ign ros bridge for /image1 topic
     ign_ros_bridge_image1 = Node(
-        name='ign_ros_bridge_image1',
         package='ros_ign_bridge',
         executable='parameter_bridge',
         arguments=['/image1@sensor_msgs/msg/Image@ignition.msgs.Image'],
@@ -164,7 +162,6 @@ def generate_launch_description():
 
     # Create ign ros bridge for /image2 topic
     ign_ros_bridge_image2 = Node(
-        name='ign_ros_bridge_image2',
         package='ros_ign_bridge',
         executable='parameter_bridge', 
         arguments=['/image2@sensor_msgs/msg/Image@ignition.msgs.Image'],
@@ -173,7 +170,6 @@ def generate_launch_description():
 
     # Create ign ros bridge for /rgbd_camera/image and /rgbd_camera/depth_image topics
     ign_ros_bridge_image3 = Node(
-        name='ign_ros_bridge_depth_camera',
         package='ros_ign_bridge',
         executable='parameter_bridge', 
         arguments=['/world/ur_simulation_world/model/ur5/link/wrist_3_link/sensor/camera3/image@sensor_msgs/msg/Image@ignition.msgs.Image',
@@ -187,14 +183,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Launch joint_state_mirror python script
-    joint_state_mirror = Node(
-        package='ur_gazebo',
-        executable='joint_state_mirror',
-        output='screen',
-        #parameters=[{'use_sim_time': True}],
-    )
-
     return LaunchDescription([
         #ur5_launch, #This launches the original ur5 description
         *declared_arguments,
@@ -205,6 +193,5 @@ def generate_launch_description():
         ign_ros_bridge_joint_states,
         ign_ros_bridge_image1,
         ign_ros_bridge_image2,
-        ign_ros_bridge_image3,
-        joint_state_mirror
+        ign_ros_bridge_image3
     ])
