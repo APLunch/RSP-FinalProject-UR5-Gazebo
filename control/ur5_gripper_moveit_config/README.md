@@ -37,4 +37,7 @@ ros2 param set /manipulator_joint_trajectory_controller use_sim_time False
 
 This prevents the trajectory controller to use simulation time because it is set to use simulation time by default.
 
+### Step 3: Observe the robot motion after executing the planned trajectory
+![image](https://github.com/APLunch/Intelligent-General-Robot/assets/60408626/f0493c6e-e2df-48d3-9cf8-e4bc53fcdded)
+
 
