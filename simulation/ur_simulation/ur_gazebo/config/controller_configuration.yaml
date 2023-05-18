@@ -2,12 +2,14 @@ controller_manager:
   ros__parameters:
     update_rate: 100
 
+    manipulator_joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
     joint_state_controller:
       type: joint_state_controller/JointStateController
     ur5_controller:
       type: position_controllers/JointGroupPositionController
-    ur5_controller_trajectory:
-      type: joint_trajectory_controller/JointTrajectoryController
+    
+    
 
 ur5_controller:
   ros__parameters:
@@ -18,8 +20,6 @@ ur5_controller:
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
-      - left_inner_knuckle_joint
-      - right_inner_knuckle_joint
     command_interfaces:
       - position
     state_interfaces:
@@ -32,27 +32,24 @@ ur5_controller:
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
-      - left_inner_knuckle_joint
-      - right_inner_knuckle_joint
 
-ur5_controller_trajectory:
+manipulator_joint_trajectory_controller:
   ros__parameters:
-    joints:
-      - shoulder_pan_joint
-      - shoulder_lift_joint
-      - elbow_joint
-      - wrist_1_joint
-      - wrist_2_joint
-      - wrist_3_joint
     command_interfaces:
       - position
     state_interfaces:
       - position
       - velocity
-    write_op_modes:
-      - shoulder_pan_joint
-      - shoulder_lift_joint
+    joints:
       - elbow_joint
+      - shoulder_lift_joint
+      - shoulder_pan_joint
       - wrist_1_joint
       - wrist_2_joint
       - wrist_3_joint
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: true # was false by default
+    constraints:
+      stopped_velocity_tolerance: 0.1
+      goal_time: 1.0
