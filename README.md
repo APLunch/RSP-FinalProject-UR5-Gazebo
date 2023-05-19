@@ -133,7 +133,7 @@ This should move the robot to look at the objects placed on the table.
 Note that this is a *fire-and-forget* function and it only proceed with the attempt, and the result of the planning or the execution is not guaranteed.
 
 ### Step 7 (Optional) Play with other Add-on features
-The above steps only covered the setup for the simulation. On the other hand, we have been working on some features that involves AI and Computer Vision.
+The above steps concluded the setup for the simulation project. On the other hand, we have been working on some features that involves AI and Computer Vision.
 #### GPT-Integrated Control
 The GPT-Integrated Control allows the user to chat with chatGPT and let it control robots to perform pick-and-place tasks like shown in the demo video below.
 As the development is still on-going, the program make sufficient assumptions on the object's poses.
@@ -145,12 +145,14 @@ The demo video:
 https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/64ce0477-0d6e-4fb6-b0e6-7fc209a5f521
 
 #### Object Detection and Location using SAM
-This feature utilizes the cameras and the depth sensor on the robot to provide perception of the robot workspace. The idea is that we use SAM (Segment Anything Model) to detect objects in the image, and locate the object's location relative to the robot frame using depth camera. 
+This feature utilizes the cameras and the depth sensor on the robot to provide perception of the robot workspace. The idea is that we use [SAM](https://github.com/facebookresearch/segment-anything) (Segment Anything Model) to detect objects in the image, and locate the object's location relative to the robot frame using depth camera. 
 
 At current stage, it can detect and publish object positions placed on the table.
 
 <img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/d5afdd28-7def-4ecd-8207-fbff6e3c12cb" width=400>
 <img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/cc519fe8-b44d-4d46-88ef-59aaeff7577d" width=400>
+
+If you want to explore it, follow [these steps](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/tree/master/visual) to build and run the igr vision service.
 
 ## Project Significance
 
