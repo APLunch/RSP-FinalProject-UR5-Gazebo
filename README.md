@@ -68,7 +68,7 @@ export IGNITION_VERSION=fortress
 ```
 Then we can proceed to build the simulation-control related packages.
 ```bash
-colcon build --packages-select ign_ros2_control ur5_gripper_moveit_config ur_gazebo move_robot
+colcon build --packages-select ign_ros2_control ur5_gripper_moveit_config ur_gazebo move_robot bringup
 ```
 
 ### Step 3: Source Gazebo Resource path
@@ -84,30 +84,54 @@ export IGN_GAZEBO_SYSTEM_PLUGIN_PATH=$IGN_GAZEBO_SYSTEM_PLUGIN_PATH:<path-to-wor
 ```
 This step tells gazebo to look for system plugins inside ```install/ign_ros2_control/lib``` which is where the ```ign_ros2_control``` plugin library is located.
 
-### Step 4: Source Built Packages
+### Step 4: Source Built Packages and Launch Project
 ``` bash
 source install/setup.bash
+ros2 launch bringup simulation_moveit_bringup.launch.py 
+```
+This should bringup the gazebo world, a Rviz window for cameras, and another Rviz window for MoveIt Planning.
+Click the 'play' botton in Gazebo to start the simulation world.
+
+Note that the table obstacle object is already spawned in the planning scene.
+
+### Step 5: One Last Step , and Start Planning!
+Please note that there is a distinction in time management between the movegroup and the simulation. The movegroup operates based on real ROS time, while the simulation employs its own simulation time. Regrettably, attempting to configure the moveit group to utilize simulation time has proven ineffective for reasons that remain unclear. Nevertheless, it has been observed that the trajectory controller functions appropriately when configured to utilize real ROS time. Consequently, it is imperative to execute the following command prior to executing the trajectory:
+```bash
+ros2 param set /manipulator_joint_trajectory_controller use_sim_time False
+```
+![image](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/b8f0d5db-8a81-4dcf-bfc6-1810d823aa63)
+
+### Step 6(Optional): Use command line to move the robot
+The package ```move_robot``` provides an interface to control the robot more easily by only publishing one ```PoseStamped``` message to its topic ```/move_robot/move_robot_fnf```
+
+Thes ```move_robot``` node is started together with ```MoveIt``` in step 4, we can play with in by publishing a command to the topic:
+```bash
+ros2 topic pub --once /move_robot/move_robot_fnf geometry_msgs/msg/PoseStamped "{
+  header: {
+    frame_id: 'base_link'
+  },
+  pose: {
+    position: { 
+      x: -0.45368513315032716, 
+      y: 0.06996090974584167, 
+      z: 0.23476112703003504 },
+    orientation: { 
+      x: 0.8624911053036711, 
+      y: 0.486167430188559, 
+      z: -0.14052325972808613, 
+      w: -0.0018805773840037013
+    }
+  }
+}"
+
 ```
 
-### Step 5: Launch Project
+This should move the robot to look at the objects placed on the table.
 
+![image](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/a5316cae-3534-4458-b6a6-5ae7f19d8722)
 
+Note that this is a *fire-and-forget* function and it only proceed with the attempt, and the result of the planning or the execution is not guaranteed.
 
-
-
-
-## Structure
-![image](https://user-images.githubusercontent.com/60408626/231640079-d7932104-3566-415c-9b9a-4c6cf317b02a.png)
-
-### Components
-The components (folders) of this project are listed as follow:
-- **visual**: This folder contains packages that involve environmental sensing using cameras, including object detection, segmentation, and tracking. For more details, please refer to the README file inside the visual folder.
-- **control**: This folder contains control packages that involve moving and manipulating robots at a lower level. These packages take high-level control commands selected by the AI as input and drive the robot. Examples of packages in this folder include UR5 controller, mobile robot controller, trajectory generators, and motion planning modules. Please see the README file inside the control folder for more information.
-- **comminication**: This folder contains packages related to AI reasoning models, human input interfaces, and higher-level robot command output ports.
-- **simulation**: This folder contains simulations for robots to be controlled. It's essential to test the viability of the robots in the simulator before deploying them in the real world. For UR5 simulation, see [this page](https://github.com/APLunch/Intelligent-General-Robot/blob/master/simulation/ur_simulation/README.md).
-
-## How-To
-1. Install ROS2 galactic following [this link](https://docs.ros.org/en/galactic/Installation.html).
 
 ## Resources
 [How to setup moveit for ros2 foxy](https://industrial-training-master.readthedocs.io/en/foxy/_source/session3/ros2/3-Build-a-MoveIt-Package.html) (Works for galactic as well).
