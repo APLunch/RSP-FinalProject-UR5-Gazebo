@@ -56,6 +56,8 @@ sudo apt-get install ros-galactic-moveit*
 Install dependencies using rosdep
 ```bash
 cd <your workspace>
+```
+```bash
 rosdep install --from-paths ./ -y --ignore-src
 ```
 
