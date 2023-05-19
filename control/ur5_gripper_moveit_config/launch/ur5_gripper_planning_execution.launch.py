@@ -4,6 +4,8 @@ import xacro
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python import get_package_share_directory
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, Command, FindExecutable
+from launch_ros.substitutions import FindPackageShare
 
 def get_package_file(package, file_path):
     """Get the location of a file installed in an ament package"""
@@ -99,6 +101,9 @@ def generate_launch_description():
         ]
     )
     # Visualization (parameters needed for MoveIt display plugin)
+    rviz_config_file = PathJoinSubstitution(
+        [FindPackageShare("ur5_gripper_moveit_config"), "config", "rviz_config.rviz"]
+    )
     rviz = Node(
         name='rviz',
         package='rviz2',
@@ -111,6 +116,7 @@ def generate_launch_description():
                 'robot_description_kinematics': kinematics_config,
             }
         ],
+        arguments=["-d", rviz_config_file],
     )
     # Controller manager for realtime interactions
     ros2_control_node = Node(

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ur_gazebo</name>
+  <name>move_robot</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="mike.h.fan@outlook.com">hongyi</maintainer>
@@ -9,21 +9,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend> ur_description </depend>
-  <depend> ign_ros2_control </depend>
   <depend> rclcpp </depend>
-  <depend> rclpy </depend>
-  <depend> urdf</depend>
-  <depend> robot_state_publisher</depend>
-  <depend> joint_state_publisher_gui</depend>
-  <depend> ros_ign_bridge </depend>
-  <depend> ros_ign_interfaces </depend>
-  <depend> ros_ign_gazebo </depend>
-  <depend> ros_ign </depend>
-  <depend> ros_ign_image </depend>
-  <depend> ur5_gripper_moveit_config </depend> 
-
-  
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

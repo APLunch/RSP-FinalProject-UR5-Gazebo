@@ -1,3 +1,9 @@
+##########################################################################
+# NOTE: THIS FILE IS NOT USED IN THE CURRENT VERSION OF THE PROJECT      #
+# THE CONTROLLER CONFIGURATION IS MANAGED BY MOVEIT CONFIGURATION PACKGE #
+# THIS FILE IS KEPT FOR REFERENCE ONLY                                   #
+##########################################################################
+
 controller_manager:
   ros__parameters:
     update_rate: 100
