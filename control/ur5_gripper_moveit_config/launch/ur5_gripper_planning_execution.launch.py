@@ -139,10 +139,24 @@ def generate_launch_description():
         for controller in controller_names
     ]
 
+    # Setup scene in moveit
+    #ros2 run moveit_ros_planning moveit_publish_scene_from_text ${scene_file} --scene --ros-args -p robot_description:="${urdf}" -p robot_description_semantic:="${srdf}"
+    setup_scene = Node(
+        package='moveit_ros_planning',
+        executable='moveit_publish_scene_from_text',
+        output='screen',
+        arguments=['--scene',get_package_file('ur5_gripper_moveit_config', 'config/table.scene')],
+        parameters=[
+            {'robot_description': robot_description},
+            {'robot_description_semantic': robot_description_semantic},
+        ]
+    )
+    
     return LaunchDescription([
         move_group_node,
         #robot_state_publisher,
         #ros2_control_node,
         rviz,
+        setup_scene,
         ] + spawn_controllers
     )
