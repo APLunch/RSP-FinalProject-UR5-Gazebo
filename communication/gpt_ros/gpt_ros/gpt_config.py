@@ -2,7 +2,7 @@ class GPTConfig:
     def __init__(self):
         self.model = "gpt-3.5-turbo"
         # self.model = "gpt-4"
-        self.api_key = "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"
+        self.api_key = "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"
         self.organization = "JohnsHopkins"
         self.temperature = 0.4
         self.max_tokens = 3000
