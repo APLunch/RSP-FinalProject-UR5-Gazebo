@@ -40,7 +40,9 @@ As a culmination of its features, this project provides a playground for future 
 ### Step 0: Clone Repository
 ```bash
 cd <your workspace>
-clone https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo.git
+```
+```bash
+git clone https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo.git
 ```
 ### Step 1: Install Dependencies
 Install all UR-related Packages
