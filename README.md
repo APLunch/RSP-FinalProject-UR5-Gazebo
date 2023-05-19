@@ -138,7 +138,7 @@ The above steps concluded the setup for the simulation project. On the other han
 The GPT-Integrated Control allows the user to chat with chatGPT and let it control robots to perform pick-and-place tasks like shown in the demo video below.
 As the development is still on-going, the program make sufficient assumptions on the object's poses.
 
-If you would like to try this, please switch branch to ```gpt_rtt_demo``` and follow [these steps](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/blob/gpt_rtt_demo/simulation/ur_simulation/README.md) for simulation setup and  [these steps](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/files/11519231/communication.pptx) for gpt node to build and run the GPT-Integrated Control.
+If you would like to try this, please switch branch to ```gpt_rtt_demo``` and follow [these steps](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/blob/gpt_rtt_demo/simulation/ur_simulation/README.md) for simulation setup and  [these steps](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/files/11519231/communication.pptx) for gpt node to build and run the GPT-Integrated Control.**Note: It seems that the GPT Key has to be private and it will be invalid once pushed to the repo along with the config file, please contact me if you would like to try this feature so I can distribute the key to you off-line**
 
 The demo video:
 
