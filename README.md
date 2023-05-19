@@ -1,5 +1,10 @@
 # RSP Final Project - UR5 Gazebo Simulation for Pick and Place Tasks
 
+<img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/9e6da746-9590-4483-966e-938d9ceffc53" width = 400>
+<img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/034ace53-f08f-4f01-b5d7-0a68edf04d9e" width = 400>
+<img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/ff16d9db-b5a6-46a6-a2a6-d5c76fe78e19" width = 400>
+<img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/397fa22a-b293-4529-bee8-c2b16a7e4155" width = 400>
+
 ## Overview
 Welcome to my GitHub project for the Robot System Programming course. This project showcases a comprehensive set of key features designed to enhance the functionality and control of a UR5 robotic arm in a simulated environment using ROS2 Galactic.
 
@@ -31,14 +36,61 @@ The project addresses the challenges posed by the incomplete migration of critic
 ### Smart Pick-n-Place Development
 As a culmination of its features, this project provides a playground for future advancements in smart pick-n-place tasks. The combination of simulated robotics, perception sensors, integrated motion planning, and the incorporation of a gripper enables the exploration and development of innovative solutions in the field of autonomous pick-and-place operations. This serves as a foundation for future research and development in automation and robotics.
 
-## Requirements
-The following requirements should be met for this project:
-- Use ROS2 Galactic for this project. All inter-package communications must be via ROS2.
-- Implement a high-level control package that comntrols the robot to perform simple tasks such as go to a certain pose, open/close gripper, etc. Motion planning and trajectory generation should be considered.
-- The AI is trained or restricted to only perform tasks asked by user. That is, the AI is only allow to decide among the high-level commands that users have given it.
-- The visual information of the robot workspace is fed to the AI at a moderate rate to ensure context awareness and decision reasoning.
-- The AI is trained or configured such it understands user natrual language and outout commands to the robots.
-- The robot is able to complete tasks (i.e. pick and place for manipulator robot) based on AI command.
+## Getting Started
+### Step 0: Clone Repository
+```bash
+cd <your workspace>
+clone https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo.git
+```
+### Step 1: Install Dependencies
+Install all UR-related Packages
+```bash
+sudo apt-get install ros-galactic-ur-*
+```
+Install all Moveit Packages
+```bash
+sudo apt-get install ros-galactic-moveit*
+```
+Install dependencies using rosdep
+```bash
+cd <your workspace>
+rosdep install --from-paths ./ -y --ignore-src
+```
+
+### Step 2: Build Packages
+Before building the packages, we need to let the ```gz_ros2_control``` package acknowledge the version of Ignition Gazebo we are using (which is fortress) to ensure the plugin is built for with the correct version. 
+```bash
+export IGNITION_VERSION=fortress
+```
+Then we can proceed to build the packages.
+```bash
+colcon build 
+```
+
+### Step 3: Source Gazebo Resource path
+```bash
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:/opt/ros/galactic/share
+```
+This step is necessry for gazebo to load resources from the ros2 directories.
+
+Next we need to set the ```IGN_GAZEBO_SYSTEM_PLUGIN_PATH``` environment variable.
+
+```bash
+export IGN_GAZEBO_SYSTEM_PLUGIN_PATH=$IGN_GAZEBO_SYSTEM_PLUGIN_PATH:<path-to-workspace>/install/ign_ros2_control/lib
+```
+This step tells gazebo to look for system plugins inside ```install/ign_ros2_control/lib``` which is where the ```ign_ros2_control``` plugin library is located.
+
+### Step 4: Source Built Packages
+``` bash
+source install/setup.bash
+```
+
+### Step 5: Launch Project
+
+
+
+
+
 
 ## Structure
 ![image](https://user-images.githubusercontent.com/60408626/231640079-d7932104-3566-415c-9b9a-4c6cf317b02a.png)
