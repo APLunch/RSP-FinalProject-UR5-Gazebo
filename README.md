@@ -66,9 +66,9 @@ Before building the packages, we need to let the ```gz_ros2_control``` package a
 ```bash
 export IGNITION_VERSION=fortress
 ```
-Then we can proceed to build the packages.
+Then we can proceed to build the simulation-control related packages.
 ```bash
-colcon build 
+colcon build --packages-select ign_ros2_control ur5_gripper_moveit_config ur_gazebo move_robot
 ```
 
 ### Step 3: Source Gazebo Resource path
