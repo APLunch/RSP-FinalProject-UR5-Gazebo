@@ -101,7 +101,7 @@ ros2 param set /manipulator_joint_trajectory_controller use_sim_time False
 ```
 ![image](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/b8f0d5db-8a81-4dcf-bfc6-1810d823aa63)
 
-### Step 6(Optional): Use command line to move the robot
+### Step 6 (Optional): Use command line to move the robot
 The package ```move_robot``` provides an interface to control the robot more easily by only publishing one ```PoseStamped``` message to its topic ```/move_robot/move_robot_fnf```
 
 Thes ```move_robot``` node is started together with ```MoveIt``` in step 4, we can play with in by publishing a command to the topic:
@@ -131,6 +131,40 @@ This should move the robot to look at the objects placed on the table.
 ![image](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/a5316cae-3534-4458-b6a6-5ae7f19d8722)
 
 Note that this is a *fire-and-forget* function and it only proceed with the attempt, and the result of the planning or the execution is not guaranteed.
+
+### Step 7 (Optional) Play with other Add-on features
+The above steps only covered the setup for the simulation. On the other hand, we have been working on some features that involves AI and Computer Vision.
+#### GPT-Integrated Control
+The GPT-Integrated Control allows the user to chat with chatGPT and let it control robots to perform pick-and-place tasks like shown in the demo video below.
+As the development is still on-going, the program make sufficient assumptions on the object's poses.
+
+If you would like to try this, please switch branch to ```gpt_rtt_demo``` and follow [these steps](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/blob/gpt_rtt_demo/simulation/ur_simulation/README.md) for simulation setup and  [these steps](https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/files/11519231/communication.pptx) for gpt node to build and run the GPT-Integrated Control.
+
+The demo video:
+
+https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/64ce0477-0d6e-4fb6-b0e6-7fc209a5f521
+
+#### Object Detection and Location using SAM
+This feature utilizes the cameras and the depth sensor on the robot to provide perception of the robot workspace. The idea is that we use SAM (Segment Anything Model) to detect objects in the image, and locate the object's location relative to the robot frame using depth camera. 
+
+At current stage, it can detect and publish object positions placed on the table.
+
+<img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/d5afdd28-7def-4ecd-8207-fbff6e3c12cb" width=400>
+<img src="https://github.com/APLunch/RSP-FinalProject-UR5-Gazebo/assets/60408626/cc519fe8-b44d-4d46-88ef-59aaeff7577d" width=400>
+
+## Project Significance
+
+### Simulation Capabilities
+The project serves as a valuable resource for students and researchers, offering a simulated environment that allows them to test and develop robotic applications without the need for physical robots. This accessibility fosters learning and experimentation in the field of robot system programming, making it an essential asset for future students and researchers.
+
+### Enhanced Perception
+The inclusion of sensors within the simulation, particularly the cameras, enables visual perception of the robot's workspace. This broadens the scope of potential applications, particularly those involving computer vision in robotics. The ability to perceive and analyze the environment visually opens up possibilities for advanced algorithms and applications in areas such as object recognition, tracking, and manipulation.
+
+### Debugging and Integration
+The project addresses the challenges posed by the incomplete migration of critical components, such as the Gazebo ROS2 control package and MoveIt, to ROS2. Through various debugging processes, the project successfully clears a path for integrating ROS controllers with Gazebo Ignition and integrates MoveIt with Gazebo. This paves the way for future developers to navigate and overcome similar obstacles, contributing to the advancement and integration of these important tools in ROS2.
+
+### Smart Pick-n-Place Development
+As a culmination of its features, this project provides a playground for future advancements in smart pick-n-place tasks. The combination of simulated robotics, perception sensors, integrated motion planning, and the incorporation of a gripper enables the exploration and development of innovative solutions in the field of autonomous pick-and-place operations. This serves as a foundation for future research and development in automation and robotics.
 
 
 ## Resources
