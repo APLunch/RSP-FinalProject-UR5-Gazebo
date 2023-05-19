@@ -135,6 +135,7 @@ def generate_launch_description():
             package="controller_manager",
             executable="spawner.py",
             arguments=[controller],
+            parameters=[{"use_sim_time": False}],
             output="screen")
         for controller in controller_names
     ]
@@ -151,12 +152,20 @@ def generate_launch_description():
             {'robot_description_semantic': robot_description_semantic},
         ]
     )
-    
+
+    #Move Robot Node - the package for easier control of the robot
+    move_robot_node = Node(
+        package='move_robot',
+        executable='move_robot_node',
+        output='screen'
+    )
+
+
     return LaunchDescription([
         move_group_node,
         #robot_state_publisher,
         #ros2_control_node,
         rviz,
         setup_scene,
-        ] + spawn_controllers
+        ] + spawn_controllers + [move_robot_node]
     )
